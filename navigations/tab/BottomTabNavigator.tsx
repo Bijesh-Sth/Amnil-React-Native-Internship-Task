@@ -1,16 +1,20 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StackNavigator} from '..';
-import {HomeScreen, Page1, TestScreen} from '../../screens';
+import {
+  HomeScreen,
+  Page1,
+  TestScreen,
+  ValidateLoginScreen,
+} from '../../screens';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {LoginScreen} from '../../screens';
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
-      //set headdershow false
+      
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => {
           let iconName: string = '';
@@ -34,7 +38,7 @@ const BottomTabNavigator: React.FC = () => {
       <Tab.Screen name="RandomQuotes" component={TestScreen} />
       <Tab.Screen name="HomePage" component={HomeScreen} />
       <Tab.Screen name="Passing Data" component={Page1} />
-      <Tab.Screen name="Login" component={LoginScreen} />
+      <Tab.Screen name="Login" component={ValidateLoginScreen} />
     </Tab.Navigator>
   );
 };

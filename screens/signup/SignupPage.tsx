@@ -2,67 +2,73 @@ import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Alert, StyleSheet} from 'react-native';
 import {Button, Input} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {comparePassword} from '../../utilities/encryption';
-import {generateToken} from '../../utilities/token';
+import {hashPassword} from '../../utilities/encryption';
 
-type LoginScreenProps = {
+type SignupScreenProps = {
   navigation: any;
 };
 
-const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
+const SignupScreen: React.FC<SignupScreenProps> = ({navigation}) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [name, setName] = useState<string>('');
 
-  const handleLogin = async () => {
+  const handleSignup = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
     try {
-      const storedUsers = await AsyncStorage.getItem('users');
-      const users = storedUsers ? JSON.parse(storedUsers) : [];
+      const hashedPassword = await hashPassword(password);
 
-      const user = users.find((u: any) => u.email === email);
+      const newUser = {
+        name,
+        email,
+        password: hashedPassword,
+        phone: '',
+        website: '',
+      };
 
-      if (!user) {
-        Alert.alert('Error', 'No user found. Please sign up.');
-        return;
-      }
+      const existingUsers = await AsyncStorage.getItem('users');
+      const users = existingUsers ? JSON.parse(existingUsers) : [];
 
-      const isPasswordMatch = await comparePassword(password, user.password);
+      users.push(newUser);
 
-      if (isPasswordMatch) {
-        const token = generateToken();
-        await AsyncStorage.setItem('token', token);
-        navigation.navigate('Profile', {user});
-      } else {
-        Alert.alert('Error', 'Invalid credentials');
-      }
+      await AsyncStorage.setItem('users', JSON.stringify(users));
+      Alert.alert('Success', 'Signup successful');
+      navigation.navigate('Login');
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'Failed to retrieve user data');
+      Alert.alert('Error', 'Failed to save user data');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to SO.</Text>
+      <Text style={styles.title}>Create an account on SO.</Text>
       <TouchableOpacity
         style={[styles.socialButton, styles.googleButton]}
         onPress={() => {}}>
-        <Text style={styles.socialButtonText}>Login with Google</Text>
+        <Text style={styles.socialButtonText}>Signup with Google</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.socialButton, styles.appleButton]}
         onPress={() => {}}>
         <Text style={[styles.socialButtonText, {color: '#fff'}]}>
-          Login with Apple
+          Signup with Apple
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.socialButton, styles.facebookButton]}
         onPress={() => {}}>
         <Text style={[styles.socialButtonText, {color: '#fff'}]}>
-          Login with Facebook
+          Signup with Facebook
         </Text>
       </TouchableOpacity>
       <Text style={styles.orText}>or by email</Text>
+      <Input placeholder="Name" value={name} onChangeText={setName} />
       <Input
         placeholder="Email Address"
         value={email}
@@ -74,13 +80,19 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Sign In" onPress={handleLogin} />
+      <Input
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+      />
+      <Button title="Sign Up" onPress={handleSignup} />
       <Text style={styles.footerText}>
-        Don't have an account?{' '}
+        Already have an account?{' '}
         <Text
-          style={styles.signupText}
-          onPress={() => navigation.navigate('Signup')}>
-          Create an account
+          style={styles.loginText}
+          onPress={() => navigation.navigate('Login')}>
+          Sign in
         </Text>
       </Text>
     </View>
@@ -133,9 +145,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: '#6c757d',
   },
-  signupText: {
+  loginText: {
     color: '#3498db',
   },
 });
 
-export default LoginScreen;
+export default SignupScreen;
