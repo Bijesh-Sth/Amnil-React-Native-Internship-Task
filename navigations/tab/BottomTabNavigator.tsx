@@ -6,6 +6,7 @@ import {
   Page1,
   TestScreen,
   ValidateLoginScreen,
+  ProfileScreen,
 } from '../../screens';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -28,6 +29,9 @@ const BottomTabNavigator: React.FC = () => {
           } else if (route.name === 'Login') {
             iconName = 'prism';
           }
+          else if (route.name === 'Profile') {
+            iconName = focused ? 'person' : 'person-outline';
+          }
 
           return <Icon name={iconName} size={size} color={color} />;
         },
@@ -39,6 +43,7 @@ const BottomTabNavigator: React.FC = () => {
       <Tab.Screen name="HomePage" component={HomeScreen} />
       <Tab.Screen name="Passing Data" component={Page1} />
       <Tab.Screen name="Login" component={ValidateLoginScreen} />
+      {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
     </Tab.Navigator>
   );
 };

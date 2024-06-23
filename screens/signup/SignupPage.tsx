@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Alert, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import {Button, Input} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {hashPassword} from '../../utilities/encryption';
@@ -51,19 +58,28 @@ const SignupScreen: React.FC<SignupScreenProps> = ({navigation}) => {
       <TouchableOpacity
         style={[styles.socialButton, styles.googleButton]}
         onPress={() => {}}>
+        <Image
+          source={require('../../assets/google.png')}
+          style={styles.icon}
+        />
         <Text style={styles.socialButtonText}>Signup with Google</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.socialButton, styles.appleButton]}
         onPress={() => {}}>
-        <Text style={[styles.socialButtonText, {color: '#fff'}]}>
+        <Image source={require('../../assets/apple.png')} style={styles.icon} />
+        <Text style={[styles.socialButtonText]}>
           Signup with Apple
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.socialButton, styles.facebookButton]}
         onPress={() => {}}>
-        <Text style={[styles.socialButtonText, {color: '#fff'}]}>
+        <Image
+          source={require('../../assets/facebook.png')}
+          style={styles.icon}
+        />
+        <Text style={[styles.socialButtonText]}>
           Signup with Facebook
         </Text>
       </TouchableOpacity>
@@ -91,7 +107,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({navigation}) => {
         Already have an account?{' '}
         <Text
           style={styles.loginText}
-          onPress={() => navigation.navigate('Login')}>
+          onPress={() => navigation.replace('Login')}>
           Sign in
         </Text>
       </Text>
@@ -125,10 +141,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   appleButton: {
-    backgroundColor: '#000000',
+    backgroundColor: '#f0f0f0', 
+    borderColor: '#db4437',
+    borderWidth: 1,
   },
   facebookButton: {
-    backgroundColor: '#3b5998',
+    backgroundColor: '#f0f0f0', 
+    borderColor: '#db4437',
+    borderWidth: 1,
   },
   socialButtonText: {
     color: '#000',
@@ -147,6 +167,10 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: '#3498db',
+  },
+  icon: {
+    width: 20,
+    height: 20,
   },
 });
 

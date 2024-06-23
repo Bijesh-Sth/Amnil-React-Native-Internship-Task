@@ -1,21 +1,20 @@
-import React, {useEffect} from 'react';
-import {View, ActivityIndicator, StyleSheet} from 'react-native';
+import React, { useEffect } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type ValidateLoginScreenProps = {
   navigation: any;
 };
 
-const ValidateLoginScreen: React.FC<ValidateLoginScreenProps> = ({
-  navigation,
-}) => {
+const ValidateLoginScreen: React.FC<ValidateLoginScreenProps> = ({ navigation }) => {
   useEffect(() => {
     const checkLoginStatus = async () => {
-      const token = await AsyncStorage.getItem('token');
-      if (token) {
-        navigation.navigate('Profile');
-      } else {
-        navigation.navigate('Login');
+      try {
+        const token = await AsyncStorage.getItem('token');
+        navigation.replace(token ? 'Login' : 'Login');
+      } catch (error) {
+        console.error('Error retrieving token:', error);
+        navigation.replace('Login');
       }
     };
 

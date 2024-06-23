@@ -11,6 +11,7 @@ import {
 import {SkeletonLoader} from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 type ProfileScreenProps = {
   route: any;
   navigation: any;
@@ -51,7 +52,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({route, navigation}) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('token');
-      navigation.navigate('Login');
+      navigation.replace('Login');
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Failed to logout');
@@ -64,7 +65,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Image source={{uri: profileData.avatar}} style={styles.avatar} />
+      <Image source={require("../../assets/Profile.png")} style={styles.avatar} />
       <Text style={styles.name}>{profileData.name}</Text>
       <Text style={styles.designation}>{profileData.designation}</Text>
       <TextInput
