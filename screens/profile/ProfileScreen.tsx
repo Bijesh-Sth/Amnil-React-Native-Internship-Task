@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,41 +8,110 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import {SkeletonLoader} from '../../components';
+import { SkeletonLoader } from '../../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 type ProfileScreenProps = {
   route: any;
   navigation: any;
 };
 
-const ProfileScreen: React.FC<ProfileScreenProps> = ({route, navigation}) => {
-  const {user} = route.params;
+const ProfileScreen: React.FC<ProfileScreenProps> = ({ route, navigation }) => {
+  const { user } = route.params;
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [profileData, setProfileData] = useState<any>(null);
-  const [phone, setPhone] = useState<string>(user.phone);
-  const [website, setWebsite] = useState<string>(user.website);
+  const [phone, setPhone] = useState<string>(user.phone || '');
+  const [gender, setGender] = useState<string>(user.gender || '');
 
   useEffect(() => {
-    setTimeout(() => {
-      setProfileData(user);
-      setIsLoading(false);
-    }, 2000);
-  }, [user]);
+    const fetchProfileData = async () => {
+      setIsLoading(true);
+      try {
+        let token = await AsyncStorage.getItem('token');
+        const response = await fetch('https://dummyjson.com/auth/me', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 401) {
+          const refreshToken = await AsyncStorage.getItem('refreshToken');
+          const refreshResponse = await fetch('https://dummyjson.com/auth/refresh', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken }),
+          });
+
+          const refreshData = await refreshResponse.json();
+          if (refreshResponse.ok) {
+            await AsyncStorage.setItem('token', refreshData.token);
+            token = refreshData.token;
+
+            const retryResponse = await fetch('https://dummyjson.com/auth/me', {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            const retryData = await retryResponse.json();
+            if (retryResponse.ok) {
+              setProfileData(retryData);
+              setPhone(retryData.phone || '');
+              setGender(retryData.gender || '');
+            } else {
+              Alert.alert('Error', retryData.message || 'Failed to fetch profile data');
+            }
+          } else {
+            Alert.alert('Error', refreshData.message || 'Failed to refresh token');
+            navigation.replace('Login');
+          }
+        } else {
+          const data = await response.json();
+          if (response.ok) {
+            setProfileData(data);
+            setPhone(data.phone || '');
+            setGender(data.gender || '');
+          } else {
+            Alert.alert('Error', data.message || 'Failed to fetch profile data');
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error', 'Failed to fetch profile data');
+        navigation.replace('Login');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
 
   const handleSave = async () => {
     try {
-      const existingUsers = await AsyncStorage.getItem('users');
-      const users = existingUsers ? JSON.parse(existingUsers) : [];
+      const token = await AsyncStorage.getItem('token');
+      const response = await fetch('https://dummyjson.com/users/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          phone,
+          gender,
+        }),
+      });
 
-      const updatedUsers = users.map((u: any) =>
-        u.email === profileData.email ? {...u, phone, website} : u,
-      );
-
-      await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
-      Alert.alert('Success', 'Profile updated successfully');
+      const data = await response.json();
+      if (response.ok) {
+        setProfileData(data);
+        Alert.alert('Success', 'Profile updated successfully');
+      } else {
+        Alert.alert('Error', data.message || 'Failed to update profile data');
+      }
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Failed to update profile data');
@@ -52,6 +121,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({route, navigation}) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('refreshToken');
       navigation.replace('Login');
     } catch (error) {
       console.error(error);
@@ -65,9 +135,9 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require("../../assets/Profile.png")} style={styles.avatar} />
-      <Text style={styles.name}>{profileData.name}</Text>
-      <Text style={styles.designation}>{profileData.designation}</Text>
+      <Image source={require('../../assets/Profile.png')} style={styles.avatar} />
+      <Text style={styles.name}>{profileData.firstName} {profileData.lastName}</Text>
+      <Text style={styles.designation}>{profileData.username}</Text>
       <TextInput
         style={styles.input}
         value={profileData.email}
@@ -76,8 +146,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({route, navigation}) => {
       <TextInput style={styles.input} value={phone} onChangeText={setPhone} />
       <TextInput
         style={styles.input}
-        value={website}
-        onChangeText={setWebsite}
+        value={gender}
+        onChangeText={setGender}
       />
       <TextInput
         style={styles.input}

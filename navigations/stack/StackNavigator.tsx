@@ -36,12 +36,12 @@ const StackNavigator = () => {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Details" component={DetailsScreen} />
       <Stack.Screen name="ValidateLogin" component={ValidateLoginScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
       <Stack.Screen
         name="Profile"
         component={ProfileScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }}/>
     </Stack.Navigator>
   );

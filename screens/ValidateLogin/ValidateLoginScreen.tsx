@@ -11,7 +11,7 @@ const ValidateLoginScreen: React.FC<ValidateLoginScreenProps> = ({ navigation })
     const checkLoginStatus = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        navigation.replace(token ? 'Login' : 'Login');
+        navigation.replace('Login');
       } catch (error) {
         console.error('Error retrieving token:', error);
         navigation.replace('Login');

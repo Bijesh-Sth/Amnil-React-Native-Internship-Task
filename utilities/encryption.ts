@@ -10,6 +10,7 @@ return new Promise((resolve, reject) => {
         if (err) {
           reject(err);
         } else {
+          console.log('Hashed Password:', hash);
           resolve(hash);
         }
       });
@@ -23,7 +24,7 @@ export const comparePassword = (password: string, hash: string): Promise<boolean
       reject(new Error('Password must be a string'));
       return;
     }
-
+    console.log('Hash to compare:', hash);
     bcrypt.compare(password, hash, (err, result) => {
       if (err) {
         reject(err);
