@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {StackNavigator, BottomTabNavigator} from './navigations';
+import {StackNavigator, BottomTabNavigator, Navigation} from './navigations';
 import {AppProvider} from './context';
 // import store from './store/store';
 // import {Provider} from 'react-redux';
@@ -9,7 +9,7 @@ function App() {
   return (
     <AppProvider>
       <NavigationContainer>
-        <StackNavigator />
+        <Navigation />
       </NavigationContainer>
     </AppProvider>
     // <NavigationContainer>

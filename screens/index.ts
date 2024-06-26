@@ -15,3 +15,6 @@ export {default as LoginScreen} from "./login/LoginScreen";
 export {default as SignupScreen} from "./signup/SignupPage";
 
 export {default as ValidateLoginScreen} from "./ValidateLogin/ValidateLoginScreen";
+
+export {default as CameraScreen} from "./camera/CameraScreen";
+export {default as ImagePickerScreen} from "./imagepicker/ImagePickerScreen";
