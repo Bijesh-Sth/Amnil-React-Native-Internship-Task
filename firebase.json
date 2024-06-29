@@ -1,0 +1,8 @@
+{
+    "react-native": {
+      "crashlytics_disable_auto_disabler": false,
+      "crashlytics_debug_enabled": true,
+      "crashlytics_auto_initialize": true
+    }
+  }
+  

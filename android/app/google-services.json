@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "822333088725",
+    "project_id": "amnilinternshiptask",
+    "storage_bucket": "amnilinternshiptask.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822333088725:android:6e9cb3e815bf1bd998135c",
+        "android_client_info": {
+          "package_name": "com.amniltask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIhkWb7SXUFFTmHEn6MwHWcm1OgKFl2Bo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

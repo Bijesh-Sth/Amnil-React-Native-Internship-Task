@@ -18,3 +18,5 @@ export {default as ValidateLoginScreen} from "./ValidateLogin/ValidateLoginScree
 
 export {default as CameraScreen} from "./camera/CameraScreen";
 export {default as ImagePickerScreen} from "./imagepicker/ImagePickerScreen";
+
+export {default as CrashTestScreen} from "./crashtest/CrashTestScreen";
