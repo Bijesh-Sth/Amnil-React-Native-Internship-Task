@@ -5,3 +5,4 @@ export {default as DrawerNavigator} from './drawers/DrawerNavigator';
 export {default as Navigation} from './stack/Navigation';
 
 export {default as AuthStackNavigator} from './stack/AuthStackNavigator';
+export {default as TabNavigator} from './tab/TabNavigator';

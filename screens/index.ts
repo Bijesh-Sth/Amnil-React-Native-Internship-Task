@@ -27,3 +27,5 @@ export {default as NotificationDemoScreen} from "./notification/NotificationDemo
 
 export {default as GoogleProfile} from "./profile/GoogleProfile";
 export {default as LoginDemoScreen} from "./login/LoginDemoScreen";
+
+export {default as CarouselScreen} from "./carousel/CarouselScreen";

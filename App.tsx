@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { Navigation, AuthStackNavigator  } from './navigations';
+import { Navigation, AuthStackNavigator, TabNavigator  } from './navigations';
 import { AppProvider } from './context';
 import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 import auth from '@react-native-firebase/auth';
@@ -45,7 +45,6 @@ const App: React.FC = () => {
 
   function onAuthStateChanged(user: null | any) {
     setUser(user);
-    if (initializing) setInitializing(false);
   }
 
   useEffect(() => {
@@ -67,8 +66,16 @@ const App: React.FC = () => {
         await notifee.cancelNotification(notification.id);
       }
     });
+    const timeout = setTimeout(() => {
+      setInitializing(false);
+    }, 5000); 
 
-    return unsubscribe;
+ 
+    return () => {
+      clearTimeout(timeout);
+      unsubscribe;
+    };
+
   }, []);
 
   useEffect(() => {
@@ -89,7 +96,8 @@ const App: React.FC = () => {
 
 return (
   <NavigationContainer>
-    <AuthStackNavigator/>
+    {/* <AuthStackNavigator/> */}
+    <TabNavigator/>
   </NavigationContainer>
 )
 }
